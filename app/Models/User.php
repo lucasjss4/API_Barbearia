@@ -49,9 +49,9 @@ class User extends Authenticatable
         ];
     }
 
-    public function user_type():HasOne
+    public function user_type():BelongsTo
     {
-        return $this->hasOne(User_Type::class);
+        return $this->belongsTo(User_Type::class);
     }
 
     public function client(): HasOne

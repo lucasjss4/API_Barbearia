@@ -88,6 +88,16 @@
                             </li>
                                                                         </ul>
                             </ul>
+                    <ul id="tocify-header-agendamentos" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="agendamentos">
+                    <a href="#agendamentos">Agendamentos</a>
+                </li>
+                                    <ul id="tocify-subheader-agendamentos" class="tocify-subheader">
+                                                    <li class="tocify-item level-2" data-unique="agendamentos-POSTapi-agendamento">
+                                <a href="#agendamentos-POSTapi-agendamento">Agendar Horário</a>
+                            </li>
+                                                                        </ul>
+                            </ul>
                     <ul id="tocify-header-autenticacao" class="tocify-header">
                 <li class="tocify-item level-1" data-unique="autenticacao">
                     <a href="#autenticacao">Autenticação</a>
@@ -959,6 +969,184 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>O ID do administrador a ser removido. Example: <code>1</code></p>
             </div>
                     </form>
+
+                <h1 id="agendamentos">Agendamentos</h1>
+
+    
+
+                                <h2 id="agendamentos-POSTapi-agendamento">Agendar Horário</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Este endpoint permite que um cliente logado realize um agendamento de 30 minutos.
+O sistema valida se o horário está disponível e notifica os administradores via SMTP.</p>
+
+<span id="example-requests-POSTapi-agendamento">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://localhost/api/agendamento" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --data "{
+    \"start_date\": \"15052026\",
+    \"start_time\": \"14:30\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/agendamento"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "start_date": "15052026",
+    "start_time": "14:30"
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-agendamento">
+            <blockquote>
+            <p>Example response (201):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;message&quot;: &quot;Agendamento realizado com sucesso!&quot;,
+    &quot;data&quot;: {
+        &quot;id&quot;: 10,
+        &quot;client_id&quot;: 5,
+        &quot;start_date&quot;: &quot;2026-05-15&quot;,
+        &quot;end_date&quot;: &quot;2026-05-15&quot;,
+        &quot;start_time&quot;: &quot;14:30&quot;,
+        &quot;end_time&quot;: &quot;15:00&quot;
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;error&quot;: &quot;Hor&aacute;rio indispon&iacute;vel&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-agendamento" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-agendamento"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-agendamento"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-agendamento" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-agendamento">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-agendamento" data-method="POST"
+      data-path="api/agendamento"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-agendamento', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-agendamento"
+                    onclick="tryItOut('POSTapi-agendamento');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-agendamento"
+                    onclick="cancelTryOut('POSTapi-agendamento');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-agendamento"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/agendamento</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-agendamento"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-agendamento"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>start_date</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="start_date"                data-endpoint="POSTapi-agendamento"
+               value="15052026"
+               data-component="body">
+    <br>
+<p>Data do agendamento no formato DDMMAAAA. Example: <code>15052026</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>start_time</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="start_time"                data-endpoint="POSTapi-agendamento"
+               value="14:30"
+               data-component="body">
+    <br>
+<p>Horário de início no formato HH:mm. Example: <code>14:30</code></p>
+        </div>
+        </form>
 
                 <h1 id="autenticacao">Autenticação</h1>
 

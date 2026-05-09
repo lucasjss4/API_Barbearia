@@ -24,7 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put("/admin/{id}", [AdmController::class, 'update']);
     Route::delete("/admin/{id}", [AdmController::class, 'destroy']);
 
-    // Route::post("/agendamento", [agendaController::class, 'store']);
+    Route::post("/agendamento", [agendaController::class, 'store']);
 
     Route::post("/logout", [loginController::class, 'logout']);
 });

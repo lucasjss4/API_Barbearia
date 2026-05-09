@@ -10,7 +10,9 @@ class Scheduling extends Model
     protected $fillable = [
         'start_date',
         'end_date',
-        'time'  
+        'start_time',
+        'end_time',
+        'client_id' 
     ];
 
     public function Client(): BelongsTo 

@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAdmRequest;
+use App\Http\Requests\UpdateAdmRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * @group Administração
+ *
+ * Endpoints restritos para usuários com perfil de administrador.
+ */
 class AdmController extends Controller
 {
     private function ifUserAdm(): bool
@@ -17,7 +24,19 @@ class AdmController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Listar Administradores
+     * @authenticated
+     * @response 200 [
+     *  {
+     *    "id": 1,
+     *    "name": "Admin",
+     *    "email": "admin@sistema.com",
+     *    "type user": "admin"
+     *  }
+     * ]
+     * @response 403 {
+     *  "error": "Acesso negado !"
+     * }
      */
     public function index()
     {
@@ -37,11 +56,21 @@ class AdmController extends Controller
         return response()->json($format, 200);
     }
 
-
     /**
-     * Store a newly created resource in storage.
+     * Criar novo Administrador
+     * 
+     * Registra um novo usuário com privilégios administrativos (user_type_id = 1) no sistema.
+     * 
+     * @authenticated
+     * 
+     * @response 201 {
+     *   "message": "Administrator criado com sucesso !"
+     * }
+     * @response 403 {
+     *   "error": "Acesso negado !"
+     * }
      */
-    public function store(Request $request)
+    public function store(StoreAdmRequest $request)
     {
         if (!$this->ifUserAdm()) return response()->json(['error' => 'Acesso negado !'], 403);
 
@@ -56,7 +85,25 @@ class AdmController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Detalhes do Administrador
+     * 
+     * Retorna as informações de perfil de um administrador específico através do seu ID.
+     * 
+     * @authenticated
+     * @urlParam id required O ID numérico do administrador. Example: 1
+     * 
+     * @response 200 {
+     *   "id": 1,
+     *   "name": "Admin Principal",
+     *   "email": "admin@sistema.com",
+     *   "type user": "admin"
+     * }
+     * @response 404 {
+     *   "message": "Usuário não encontrado"
+     * }
+     * @response 403 {
+     *   "error": "Acesso negado !"
+     * }
      */
     public function show(string $id)
     {
@@ -75,9 +122,21 @@ class AdmController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualizar Administrador
+     * 
+     * Permite a alteração dos dados cadastrais (nome e e-mail) de um administrador existente.
+     * 
+     * @authenticated
+     * @urlParam id required O ID do administrador que será editado. Example: 1
+     * 
+     * @response 200 {
+     *   "message": "Usuário atualizado com sucesso"
+     * }
+     * @response 403 {
+     *   "error": "Acesso negado !"
+     * }
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateAdmRequest $request, string $id)
     {
         if (!$this->ifUserAdm()) return response()->json(['error' => 'Acesso negado !'], 403);
 
@@ -89,8 +148,21 @@ class AdmController extends Controller
         return response()->json(['message' => 'Usuário atualizado com sucesso'], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
+   /**
+     * Excluir Administrador
+     * 
+     * Remove permanentemente um registro de administrador do banco de dados.
+     * **Nota:** Apenas administradores autorizados podem realizar esta ação.
+     * 
+     * @authenticated
+     * @urlParam id required O ID do administrador a ser removido. Example: 1
+     * 
+     * @response 200 {
+     *   "message": "Usuário deletado com sucesso !"
+     * }
+     * @response 403 {
+     *   "error": "Acesso negado !"
+     * }
      */
     public function destroy(string $id)
     {

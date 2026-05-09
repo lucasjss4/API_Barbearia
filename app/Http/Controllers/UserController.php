@@ -2,14 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreClient;
+use App\Http\Requests\UpdateClientRequest;
 use App\Models\Client;
 use App\Models\User;
 use App\Services\UserService as ServicesUserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * @group Clientes
+ *
+ * Gerenciamento de dados dos clientes e seus perfis.
+ */
 class UserController extends Controller
 {
+    /**
+     * Listar Clientes
+     * @authenticated
+     */
     public function index()
     {
 
@@ -30,7 +41,17 @@ class UserController extends Controller
         return response()->json($format,200);
     }
 
-    public function store(Request $request)
+    /**
+     * Cadastro de Cliente (Público)
+     * 
+     * Cria um novo usuário do tipo 'Cliente' no sistema. 
+     * A validação dos dados é feita automaticamente.
+     * 
+     * @response 201 {
+     *   "message": "Usuário criado com sucesso !"
+     * }
+     */
+    public function store(StoreClient $request)
     {
         $user = new User();
         $user->name = $request->name;
@@ -49,6 +70,26 @@ class UserController extends Controller
         return response()->json(["message" => "Usuário criado com sucesso !"], 201);
     }
 
+    /**
+     * Detalhes do Cliente
+     * 
+     * Retorna as informações completas de um cliente específico, incluindo dados de endereço e contato.
+     * 
+     * @authenticated
+     * @urlParam id required O ID numérico do cliente. Example: 1
+     * 
+     * @response 200 {
+     *   "name": "Lucas Silva",
+     *   "email": "lucas@exemplo.com",
+     *   "type user": "cliente",
+     *   "phone": "11999999999",
+     *   "address": "Rua Exemplo, 123",
+     *   "city": "São Paulo"
+     * }
+     * @response 404 {
+     *   "message": "Usuário não encontrado !"
+     * }
+     */
     public function show(string $id)
     {
         $user = Client::find($id);
@@ -65,7 +106,22 @@ class UserController extends Controller
         ], 200);
     }
 
-    public function update(Request $request, string $id){
+    /**
+     * Atualizar Cliente
+     * 
+     * Permite editar as informações de perfil do cliente e os dados de acesso do usuário.
+     * 
+     * @authenticated
+     * @urlParam id required O ID do cliente que será editado. Example: 1
+     * 
+     * @response 200 {
+     *   "message": "Usuário atualizado com sucesso !"
+     * }
+     * @response 404 {
+     *   "message": "Usuário não encontrado !"
+     * }
+     */
+    public function update(UpdateClientRequest $request, string $id){
         $client = Client::find($id);
         $client->phone = $request->phone;
         $client->address = $request->address;
@@ -80,6 +136,22 @@ class UserController extends Controller
         return response()->json(["message" => "Usuário atualizado com sucesso !"], 200);
     }
 
+    /**
+     * Excluir Cliente
+     * 
+     * Remove permanentemente o registro do cliente e seu usuário vinculado do sistema.
+     * **Atenção:** Esta operação é irreversível.
+     * 
+     * @authenticated
+     * @urlParam id required O ID do cliente a ser removido. Example: 1
+     * 
+     * @response 200 {
+     *   "message": "Usuário excluído com sucesso !"
+     * }
+     * @response 404 {
+     *   "message": "Usuário não encontrado !"
+     * }
+     */
     public function destroy(string $id){
         $client = Client::find($id);
         $user = User::find($client->user_id);

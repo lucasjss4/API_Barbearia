@@ -2,18 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * @group Autenticação
+ *
+ * Endpoints para gerenciar sessões de usuários e obtenção de tokens.
+ */
 class loginController extends Controller
 {
-    public function login(Request $request)
+    /**
+     * Login de Usuário
+     * 
+     * Recebe as credenciais e retorna o token de acesso (Sanctum).
+     * 
+     * @response 200 {
+     *  "token": "1|ra9vT8p2..."
+     * }
+     * @response 401 {
+     *  "message": "Credenciais inválidas. Verifique seu e-mail e senha."
+     * }
+     */
+    public function login(LoginRequest $request)
     {
 
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => 'required'
-        ]);
+        $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
 
@@ -29,6 +44,16 @@ class loginController extends Controller
         }
     }
 
+    /**
+     * Logout de Usuário
+     * 
+     * Revoga o token de acesso atual do usuário.
+     * @authenticated
+     * 
+     * @response 200 {
+     *  "message": "Logout realizado com sucesso !"
+     * }
+     */
     public function logout(Request $request){
         $request->user()->currentAccessToken()->delete();
 
